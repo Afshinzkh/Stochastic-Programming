@@ -1,5 +1,5 @@
 # Include files
-SOURCES=initLB.c visualLB.c boundary.c collision.c streaming.c computeCellValues.c main.c helper.c
+SOURCES=initializer.c helper.c main.c
 
 # Compiler
 # --------
@@ -12,7 +12,7 @@ CFLAGS=-Werror -pedantic -Wall -std=gnu99 -O3
 LDFLAGS=-lm
 
 OBJECTS=$(SOURCES:.c=.o)
-EXECUTABLE=lbsim
+EXECUTABLE=Algorithm1
 
 all: $(EXECUTABLE)
 

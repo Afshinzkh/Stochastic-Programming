@@ -1,6 +1,13 @@
+#ifndef _MAIN_C_
+#define _MAIN_C_
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+#include "initialiazer.h"
+#include "helper.h"
 
 
 double fun_g (double Q)
@@ -58,12 +65,12 @@ int main(int argc, char *argv[])
 
 
     init_E(E, d_max, T);
+    I[T+1] = 0;         ///////////////////// bayad barresi shavad
     
     double Sigmas; /// the sum of probabilities
-    ///Initialaze E here
 
-    I[T+1] = 0;         ///////////////////// bayad barresi shavad
-    E[I[T+1]][T+1] = 0; /////////////////////
+
+   
     int t; ///counter
     int i = 0; /// helper counter. this is actually the indices for I[t] but since I[t]
                     /// is sometimes negative, we use i to prevent that
@@ -114,3 +121,5 @@ int main(int argc, char *argv[])
     printf("done!");
     return 0;
 }
+
+#endif
