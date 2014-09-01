@@ -10,11 +10,11 @@
 #include "helper.h"
 
 
-double fun_g (double Q)
+/*double fun_g (double Q)
 {
     return 2 + 3*Q;
 }
-
+*/
 
 
 double cal_sigma (int dmax, double E ,  double prob)
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
                    Sigmas = cal_sigma(d_max,E[i-dk[m]+Q[t+1][i]][t+1],prob);
                }
 
-                E[i][t] = fun_g(Q[t+1][i]) + h*max_fun(0,I[t]) + p*min_fun(0,I[t]) + Sigmas;
+                E[i][t] = ProcurementCost(Q[t+1][i], c, k) + h*fmax(0,I[t]) + p*fmax(0,I[t]) + Sigmas;
                ///}
                if (E[i][t] < E_min [i][t])
                {
@@ -106,9 +106,9 @@ int main(int argc, char *argv[])
     Q_opt[1][I0] = 0;
     for (Q[1][I0] = 0; Q[1][I0] <= 2*d_max; Q[1][I0]++)
     {
-        if (Q[1][I0]<= max_fun(0,d_max-I[0]) && Q[1][I[0]] >= min_fun(0,I0))
+        if (Q[1][I0]<= fmax(0,d_max-I[0]) && Q[1][I[0]] >= fmin(0,I0))
         {
-            E[I[0]][0] = fun_g(Q[1][I0]) + h*max_fun(0,I0) + p*min_fun(0,I0);/// + sigma_counter(d_max, E[I[0]-])
+            E[I[0]][0] = ProcurementCost(Q[1][I0], c, k) + h*fmax(0,I0) + p*fmin(0,I0);/// + sigma_counter(d_max, E[I[0]-])
         }
         if (E[I0][0] < E_min[I0][0])
         {

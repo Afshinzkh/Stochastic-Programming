@@ -46,3 +46,8 @@ void init_E(double *E, int d_max, int T)
 		for (b = 0; b <= 2*d_max; b++)
 			E[a][b] = 0;
 }
+
+double ProcurementCost( double Q, double c, double k)
+{
+	return c + k*Q;
+}
