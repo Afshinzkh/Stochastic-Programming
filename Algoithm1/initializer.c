@@ -39,15 +39,43 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
 	return 0;
 }
 
-void init_E(double *E, int d_max, int T)
+void init_Emin(double *E_min, int d_max, int T)
 {
 	int a, b;
 	for (a = 0; a <= T+1; a++)
 		for (b = 0; b <= 2*d_max; b++)
-			E[a][b] = 0;
+			E_min[a][b] = 0;
 }
 
 double ProcurementCost( double Q, double c, double k)
 {
 	return c + k*Q;
+}
+
+double CalculateSigmaFirst ( int D_max, double insideSum, double *E_min, double *dk, double *pr, int insideTIME)
+{
+/*	E_min[i-dk[m]+Q[t+1][i]][t+1] first array is insideSUM and second array is insideTIME */
+
+	int counter;
+	double Sigma = 0;
+	for (counter = 0; counter <= D_max; counter++ )
+	{
+		Sigma += pr[counter]* E_min[insideSum-dk[counter]][insideTIME];
+	}
+
+	return Sigma;
+}
+
+double CalculateSigmaSecond ( int D_max, double insideSum, double *E, double *dk, double *pr, int insideTIME)
+{
+/*	E[I0-dk[m]+Q[1][I0]][1] first array is insideSUM and second array is insideTIME */
+
+	int counter;
+	double Sigma = 0;
+	for (counter = 0; counter <= D_max; counter++ )
+	{
+		Sigma += pr[counter]* E[insideSum-dk[counter]][insideTIME];
+	}
+
+	return Sigma;
 }

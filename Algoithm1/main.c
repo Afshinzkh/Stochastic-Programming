@@ -16,7 +16,7 @@
 }
 */
 
-
+/*
 double cal_sigma (int dmax, double E ,  double prob)
 {
     double Sigma = 0 ;
@@ -26,7 +26,7 @@ double cal_sigma (int dmax, double E ,  double prob)
         Sigma += prob *  E;
     }
     return Sigma;
-}
+}*/
 //double cal_E (int i, int t, double Q, double E[])
 //{
 //
@@ -58,16 +58,16 @@ int main(int argc, char *argv[])
   E_min = (double *) malloc((size_t)(2*d_max+1) * (T+2) * sizeof(double));    
   I = (int *) malloc((size_t)(T+2) * sizeof(int));
 
-    int m,n;      /// useless helper counter
+  /*  int m,n;      /// useless helper counter*/
 
 
     if (Q == 0 || Q_opt == 0 || E == 0 || E_min == 0 || I == 0) ERROR("Storage cannot be allocated");
 
 
-    init_E(E, d_max, T);
+    init_Emin(E_min, d_max, T);
     I[T+1] = 0;         ///////////////////// bayad barresi shavad
     
-    double Sigmas; /// the sum of probabilities
+    /*double Sigmas; /// the sum of probabilities*/
 
 
    
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
                    Sigmas = cal_sigma(d_max,E[i-dk[m]+Q[t+1][i]][t+1],prob);
                }
 
-                E[i][t] = ProcurementCost(Q[t+1][i], c, k) + h*fmax(0,I[t]) + p*fmax(0,I[t]) + Sigmas;
+                E[i][t] = ProcurementCost(Q[t+1][i], c, k) + h*fmax(0,I[t]) + p*fmax(0,I[t]) + CalculateSigmaFirst(d_max, i+Q[t+1][i], E_min, dk, pr, t+1);
                ///}
                if (E[i][t] < E_min [i][t])
                {
@@ -106,9 +106,9 @@ int main(int argc, char *argv[])
     Q_opt[1][I0] = 0;
     for (Q[1][I0] = 0; Q[1][I0] <= 2*d_max; Q[1][I0]++)
     {
-        if (Q[1][I0]<= fmax(0,d_max-I[0]) && Q[1][I[0]] >= fmin(0,I0))
+        if (Q[1][I0]<= fmax(0,d_max-I0) && Q[1][I0] >= fmin(0,I0))
         {
-            E[I[0]][0] = ProcurementCost(Q[1][I0], c, k) + h*fmax(0,I0) + p*fmin(0,I0);/// + sigma_counter(d_max, E[I[0]-])
+            E[I0][0] = ProcurementCost(Q[1][I0], c, k) + h*fmax(0,I0) + p*fmin(0,I0) + CalculateSigmaSecond(d_max, I0+Q[1][I0], E, dk, pr, 1);
         }
         if (E[I0][0] < E_min[I0][0])
         {
