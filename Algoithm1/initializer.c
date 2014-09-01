@@ -4,9 +4,10 @@
 
 
 
-int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c, double *k, double *pr, double *dk, int argc, char *argv[])
+int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c, double *k, double *pr, int *dk, int argc, char *argv[])
 {
-	double pr1,pr2,pr3,dk1,dk2,dk3
+	double pr1,pr2,pr3;
+	int dk1,dk2,dk3;
 
 	if (argc != 2)
 	{
@@ -25,9 +26,9 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
 	READ_DOUBLE(argv[1], pr1);
 	READ_DOUBLE(argv[1], pr2);
 	READ_DOUBLE(argv[1], pr3);
-	READ_DOUBLE(argv[1], dk1);
-	READ_DOUBLE(argv[1], dk2);
-	READ_DOUBLE(argv[1], dk3);
+	READ_INT(argv[1], dk1);
+	READ_INT(argv[1], dk2);
+	READ_INT(argv[1], dk3);
 
 	dk[0] = dk1;
 	dk[1] = dk2;
@@ -39,7 +40,7 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
 	return 0;
 }
 
-void init_Emin(double *E_min, int d_max, int T)
+void init_Emin(double **E_min, int d_max, int T)
 {
 	int a, b;
 	for (a = 0; a <= T+1; a++)
@@ -52,7 +53,7 @@ double ProcurementCost( double Q, double c, double k)
 	return c + k*Q;
 }
 
-double CalculateSigmaFirst ( int D_max, double insideSum, double *E_min, double *dk, double *pr, int insideTIME)
+double CalculateSigmaFirst ( int D_max, int insideSum, double **E_min, int *dk, double *pr, int insideTIME)
 {
 /*	E_min[i-dk[m]+Q[t+1][i]][t+1] first array is insideSUM and second array is insideTIME */
 
@@ -66,7 +67,7 @@ double CalculateSigmaFirst ( int D_max, double insideSum, double *E_min, double 
 	return Sigma;
 }
 
-double CalculateSigmaSecond ( int D_max, double insideSum, double *E, double *dk, double *pr, int insideTIME)
+double CalculateSigmaSecond ( int D_max, int insideSum, double **E, int *dk, double *pr, int insideTIME)
 {
 /*	E[I0-dk[m]+Q[1][I0]][1] first array is insideSUM and second array is insideTIME */
 

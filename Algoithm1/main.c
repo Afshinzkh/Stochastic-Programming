@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "initialiazer.h"
+#include "initializer.h"
 #include "helper.h"
 
 
@@ -41,14 +41,14 @@ int main(int argc, char *argv[])
   double c;       /// Admin cost
   double k;       /// Procurement cost per piece
 
-  double *Q = NULL;     /// Optimal desicion
-  double *Q_opt = NULL; /// Optimal opptimal desicion
-  double *E = NULL;     /// Expected Value
-  double *E_min = NULL; /// Minimum Expected Value
+  double **Q = NULL;     /// Optimal desicion
+  double **Q_opt = NULL; /// Optimal opptimal desicion
+  double **E = NULL;     /// Expected Value
+  double **E_min = NULL; /// Minimum Expected Value
   int *I = NULL;        /// Inventory 
 
   double *pr = (double *) malloc ((size_t)(3 * sizeof(double)));
-  double *dk = (double *) malloc ((size_t)(3 * sizeof(double)));
+  int *dk = (double *) malloc ((size_t)(3 * sizeof(int)));
     
   readParameters(&T, &d_max, &I0, &h, &p, &c, &k, pr, dk, argc, argv);
 
@@ -85,10 +85,10 @@ int main(int argc, char *argv[])
            {
                ///if (Q[t+1][i] <= (d_max-I[t]) && Q[t+1][i] >= abs(I[t]) ) /// because I[t] is negative so the indices should change accordingly
                ///{
-               for (m=0;m<=d_max;m++)
+          /*     for (m=0;m<=d_max;m++)
                {
                    Sigmas = cal_sigma(d_max,E[i-dk[m]+Q[t+1][i]][t+1],prob);
-               }
+               }*/
 
                 E[i][t] = ProcurementCost(Q[t+1][i], c, k) + h*fmax(0,I[t]) + p*fmax(0,I[t]) + CalculateSigmaFirst(d_max, i+Q[t+1][i], E_min, dk, pr, t+1);
                ///}
