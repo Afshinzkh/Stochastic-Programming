@@ -40,12 +40,15 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
 	return 0;
 }
 
-void init_Emin(double **E_min, int d_max, int T)
+void init_Emin(double *E_min, int d_max, int T)
 {
+	printf("init_Emin started\n");
+	double (*EMIN)[T+2] = (double(*)[T+2])E_min; 
 	int a, b;
-	for (a = 0; a <= T+1; a++)
-		for (b = 0; b <= 2*d_max; b++)
-			E_min[a][b] = 0;
+	for (a = 0; a <= 2*d_max; a++)
+		for (b = 0; b <= T+1; b++)
+			EMIN[a][b] = 0;
+	printf("init_Emin done.\n");
 }
 
 double ProcurementCost( double Q, double c, double k)
@@ -53,15 +56,16 @@ double ProcurementCost( double Q, double c, double k)
 	return c + k*Q;
 }
 
-double CalculateSigmaFirst ( int D_max, int insideSum, double **E_min, int *dk, double *pr, int insideTIME)
+double CalculateSigmaFirst ( int D_max, int insideSum, double *E_min, int *dk, double *pr, int insideTIME, int T)
 {
 /*	E_min[i-dk[m]+Q[t+1][i]][t+1] first array is insideSUM and second array is insideTIME */
 
+	double (*EMIN)[T+2] = (double(*)[T+2])E_min; 
 	int counter;
 	double Sigma = 0;
 	for (counter = 0; counter <= D_max; counter++ )
 	{
-		Sigma += pr[counter]* E_min[insideSum-dk[counter]][insideTIME];
+		Sigma += pr[counter]* EMIN[insideSum-dk[counter]][insideTIME];
 	}
 
 	return Sigma;

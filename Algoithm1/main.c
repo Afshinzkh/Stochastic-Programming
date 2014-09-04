@@ -44,17 +44,18 @@ int main(int argc, char *argv[])
   double **Q = NULL;     /// Optimal desicion
   double **Q_opt = NULL; /// Optimal opptimal desicion
   double **E = NULL;     /// Expected Value
-  double **E_min = NULL; /// Minimum Expected Value
+  double *E_min = NULL; /// Minimum Expected Value
+  double (*Emin)[T+2] = (double(*)[T+2])E_min; 
   int *I = NULL;        /// Inventory 
 
   double *pr = (double *) malloc ((size_t)(3 * sizeof(double)));
-  int *dk = (double *) malloc ((size_t)(3 * sizeof(int)));
+  int *dk = (int *) malloc ((size_t)(3 * sizeof(int)));
     
   readParameters(&T, &d_max, &I0, &h, &p, &c, &k, pr, dk, argc, argv);
 
-  Q = (double *) malloc((size_t)(T+2) * (2*d_max+1) * sizeof(double));        /// first array is time (t) , second array is inventory
-  Q_opt = (double *) malloc((size_t)(T+2) * (2*d_max+1) * sizeof(double));
-  E = (double *) malloc((size_t)(2*d_max+1) * (T+2) * sizeof(double));        /// first array is inventory (I) , second array is time
+  Q = (double **) malloc((size_t)(T+2) * (2*d_max+1) * sizeof(double));        /// first array is time (t) , second array is inventory
+  Q_opt = (double **) malloc((size_t)(T+2) * (2*d_max+1) * sizeof(double));
+  E = (double **) malloc((size_t)(2*d_max+1) * (T+2) * sizeof(double));        /// first array is inventory (I) , second array is time
   E_min = (double *) malloc((size_t)(2*d_max+1) * (T+2) * sizeof(double));    
   I = (int *) malloc((size_t)(T+2) * sizeof(int));
 
@@ -79,7 +80,7 @@ int main(int argc, char *argv[])
         for (I[t] = -d_max; I[t] <= d_max; I[t]++)
         {
            i = I[t] + d_max; /// here i is defined
-           E_min[i][t] = 200;
+           Emin[i][t] = 200;
            Q_opt[t+1][i] = 0;
            for (Q[t+1][i]=abs(I[t]); Q[t+1][i]<= d_max-I[t]; Q[t+1][i]++) /// this loop is stupid and can be merged with the if statement below, but yet we dont touch it
            {
@@ -90,19 +91,19 @@ int main(int argc, char *argv[])
                    Sigmas = cal_sigma(d_max,E[i-dk[m]+Q[t+1][i]][t+1],prob);
                }*/
 
-                E[i][t] = ProcurementCost(Q[t+1][i], c, k) + h*fmax(0,I[t]) + p*fmax(0,I[t]) + CalculateSigmaFirst(d_max, i+Q[t+1][i], E_min, dk, pr, t+1);
+                E[i][t] = ProcurementCost(Q[t+1][i], c, k) + h*fmax(0,I[t]) + p*fmax(0,I[t]) + CalculateSigmaFirst(d_max, i+Q[t+1][i], E_min, dk, pr, t+1, T);
                ///}
-               if (E[i][t] < E_min [i][t])
+               if (E[i][t] < Emin [i][t])
                {
-                   E_min [i][t] = E[i][t];
+                   Emin [i][t] = E[i][t];
                    Q_opt[t+1][i] = Q[t+1][i];
                }
 
            }
-             printf("E_min (%d, %d) = %f\n", I[t], t, E_min[i][t] );
+             printf("Emin (%d, %d) = %f\n", I[t], t, Emin[i][t] );
         }
     }
-    E_min[I0][0] = 200;
+    Emin[I0][0] = 200;
     Q_opt[1][I0] = 0;
     for (Q[1][I0] = 0; Q[1][I0] <= 2*d_max; Q[1][I0]++)
     {
@@ -110,14 +111,22 @@ int main(int argc, char *argv[])
         {
             E[I0][0] = ProcurementCost(Q[1][I0], c, k) + h*fmax(0,I0) + p*fmin(0,I0) + CalculateSigmaSecond(d_max, I0+Q[1][I0], E, dk, pr, 1);
         }
-        if (E[I0][0] < E_min[I0][0])
+        if (E[I0][0] < Emin[I0][0])
         {
-            E_min[I0][0] = E[I0][0];
+            Emin[I0][0] = E[I0][0];
              Q_opt[1][I0] = Q[1][I0];
         }
 
     }
 
+
+    free(Q);
+    free(Q_opt);
+    free(I);
+    free(E);
+    free(E_min);
+    free(dk); 
+    free(pr);
     printf("done!");
     return 0;
 }

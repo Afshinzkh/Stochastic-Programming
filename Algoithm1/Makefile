@@ -5,7 +5,7 @@ SOURCES=initializer.c helper.c main.c
 # --------
 CC=gcc
 
-CFLAGS= -Werror -pedantic -Wall -std=gnu99 -O3
+CFLAGS= -Werror -pedantic -Wall -std=gnu99 
 
 # Linker flags
 # ------------
