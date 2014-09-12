@@ -30,57 +30,53 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
 	READ_INT(argv[1], dk2);
 	READ_INT(argv[1], dk3);
 
+	
+
 	dk[0] = dk1;
 	dk[1] = dk2;
 	dk[2] = dk3;
 	pr[0] = pr1;
-	pr[0] = pr2;
-	pr[0] = pr3;
+	pr[1] = pr2;
+	pr[2] = pr3;
 
 	return 0;
 }
 
-void init_Emin(double *E_min, int d_max, int T)
+void init_Emin(double **Emin, int d_max, int T)
 {
-	printf("init_Emin started\n");
-	double (*EMIN)[T+2] = (double(*)[T+2])E_min; 
+	///printf("init_Emin started\n");
+	///double (*EMIN)[T+2] = (double(*)[T+2])E_min; 
 	int a, b;
 	for (a = 0; a <= 2*d_max; a++)
 		for (b = 0; b <= T+1; b++)
-			EMIN[a][b] = 0;
-	printf("init_Emin done.\n");
+			Emin[a][b] = 0;
+	///printf("init_Emin done.\n");
 }
 
 double ProcurementCost( double Q, double c, double k)
 {
+	if (Q==0) return 0;
 	return c + k*Q;
 }
 
-double CalculateSigmaFirst ( int D_max, int insideSum, double *E_min, int *dk, double *pr, int insideTIME, int T)
+double CalculateSigma( int D_max, int insideSum, double **Emin, int *dk, double *pr, int insideTIME)
 {
 /*	E_min[i-dk[m]+Q[t+1][i]][t+1] first array is insideSUM and second array is insideTIME */
 
-	double (*EMIN)[T+2] = (double(*)[T+2])E_min; 
+	///double (*EMIN)[T+2] = (double(*)[T+2])E_min; 
 	int counter;
 	double Sigma = 0;
+///	printf("started \n");
+
 	for (counter = 0; counter <= D_max; counter++ )
 	{
-		Sigma += pr[counter]* EMIN[insideSum-dk[counter]][insideTIME];
+	///	printf("%d pr=%f\n",counter, pr[counter] );
+	///	printf("dk=%d\n",dk[counter] );
+	///	printf("Indicessag=%d\n", insideSum);
+		Sigma += pr[counter]* Emin[insideSum-dk[counter]][insideTIME];
 	}
-
+///	printf("Shit\n");
 	return Sigma;
 }
 
-double CalculateSigmaSecond ( int D_max, int insideSum, double **E, int *dk, double *pr, int insideTIME)
-{
-/*	E[I0-dk[m]+Q[1][I0]][1] first array is insideSUM and second array is insideTIME */
 
-	int counter;
-	double Sigma = 0;
-	for (counter = 0; counter <= D_max; counter++ )
-	{
-		Sigma += pr[counter]* E[insideSum-dk[counter]][insideTIME];
-	}
-
-	return Sigma;
-}

@@ -20,8 +20,8 @@ int max( int a, int b)
 
 double fmin( double a, double b)
 {
-    if( a < b ) return a;
-    return b;
+    if( a < b ) return abs(a);
+    return abs(b);
 }
 
 double fmax( double a, double b)
@@ -223,3 +223,102 @@ void read_double( const char* szFileName, const char* szVarName, double* pVariab
 	                              *pVariable );
 }
 
+
+
+/* ----------------------------------------------------------------------- */
+/*                      general matrix functions                           */
+/* ----------------------------------------------------------------------- */
+
+/*  allocates storage for a matrix                                         */
+double **matrix( int nrl, int nrh, int ncl, int nch )
+{
+   int i;
+   int nrow = nrh - nrl + 1;    /* compute number of lines */
+   int ncol = nch - ncl + 1;    /* compute number of columns */
+
+   double **pArray  = (double **) malloc((size_t)( nrow ) * sizeof(double*) );
+   double  *pMatrix = (double *)  malloc((size_t)( nrow * ncol ) * sizeof( double ));
+
+   if( pArray  == 0)  ERROR("Storage cannot be allocated");
+   if( pMatrix == 0)  ERROR("Storage cannot be allocated");
+
+   /* first entry of the array points to the value corrected by the
+      beginning of the column */
+   pArray[0] = pMatrix - ncl;
+
+   /* compute the remaining array entries */
+   for( i = 1; i < nrow; i++ )
+   {
+       pArray[i] = pArray[i-1] + ncol;
+   }
+
+   /* return the value corrected by the beginning of a line */
+   return pArray - nrl;
+}
+
+
+/* deallocates the storage of a matrix  */
+void free_matrix( double **m, int nrl, int nrh, int ncl, int nch )
+{
+   double **pArray  = m + nrl;
+   double  *pMatrix = m[nrl]+ncl;
+
+   free( pMatrix );
+   free( pArray );
+}
+
+void init_matrix( double **m, int nrl, int nrh, int ncl, int nch, double a)
+{
+   int i,j;
+   for( i = nrl; i <= nrh; i++)
+       for( j = ncl; j <= nch; j++)
+           m[i][j] = a;
+}
+
+
+/* allocates storage for a matrix */
+int **imatrix( int nrl, int nrh, int ncl, int nch )
+{
+   int i;
+
+   int nrow = nrh - nrl + 1;    /* compute number of rows */
+   int ncol = nch - ncl + 1;    /* compute number of columns */
+
+   int **pArray  = (int **) malloc((size_t)( nrow ) * sizeof( int* ));
+   int  *pMatrix = (int *)  malloc((size_t)( nrow * ncol ) * sizeof( int ));
+
+
+   if( pArray  == 0)  ERROR("Storage cannot be allocated");
+   if( pMatrix == 0)  ERROR("Storage cannot be allocated");
+
+   /* first entry of the array points to the value corrected by the
+      beginning of the column */
+   pArray[0] = pMatrix - ncl;
+
+   /* compute the remaining array entries */
+   for( i = 1; i < nrow; i++ )
+   {
+       pArray[i] = pArray[i-1] + ncol;
+   }
+
+   /* return the value corrected by the beginning of a line */
+   return pArray - nrl;
+}
+
+/* deallocates the storage of a matrix  */
+void free_imatrix( int **m, int nrl, int nrh, int ncl, int nch )
+{
+   int **pArray  = m + nrl;
+   int  *pMatrix = m[nrl]+ncl;
+
+   free( pMatrix );
+   free( pArray );
+}
+
+void init_imatrix( int **m, int nrl, int nrh, int ncl, int nch, int a)
+{
+   int i,j;
+   for( i = nrl; i <= nrh; i++)
+       for( j = ncl; j <= nch; j++)
+           m[i][j] = a;
+}
