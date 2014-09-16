@@ -1,5 +1,5 @@
 # Include files
-SOURCES=initializer.c helper.c main.c
+SOURCES=initializer.c helper.c ProbCalculator.c main.c 
 
 # Compiler
 # --------
