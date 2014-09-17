@@ -62,18 +62,20 @@ int main(int argc, char *argv[])
     int t;                         ///time counter
     int I_indice = 0;              /// helper counter. this is actually the indices for I[t] but since I[t]
                                   /// is sometimes negative, we use I_indice to prevent that
+
     for (t=T;t >=1 ;t--)
     {
         for (I[t] = -d_max; I[t] <= d_max; I[t]++)
         {
            I_indice = I[t] + d_max;     /// here I_indice is defined
            E_min[I_indice][t] = 900000;
-           Q_opt[t+1][I_indice] = 0;
+           Q_opt[t+1][I_indice] = 0.0;
            for (Q[t+1][I_indice]=fmin(I[t],0); Q[t+1][I_indice]<= fmax(d_max-I[t],0); Q[t+1][I_indice]++) 
            {
 
-                E[I_indice][t] = ProcurementCost(Q[t+1][I_indice], c, k) + h*fmax(0,I[t]) + p*fmax(0,I[t]) + CalculateSigma(d_max, I_indice+Q[t+1][I_indice], E_min, Demand_Data_Array, ProbabilityArray, t+1, Demand_Data_num);
 
+                E[I_indice][t] = ProcurementCost(Q[t+1][I_indice], c, k) + h*fmax(0,I[t]) + p*fmin(0,I[t]) + CalculateSigma(d_max, I_indice+Q[t+1][I_indice], E_min, Demand_Data_Array, ProbabilityArray, t+1, Demand_Data_num);
+                ///printf("Here is E: %.2f for Q = %2.f \n", E[I_indice][t], Q[t+1][I_indice] );
                 if (E[I_indice][t] < E_min [I_indice][t])
                 {
                    E_min [I_indice][t] = E[I_indice][t];
@@ -81,19 +83,20 @@ int main(int argc, char *argv[])
                 }
 
            }
-                printf("E_min (%d, %d) = %4.0f \t *\n", I[t], t, E_min[I_indice][t] );
-                printf("Q_opt (%d, %d) = %.2f \t *\n", t+1, I[t], Q_opt[t+1][I_indice] );
+                printf("E_min (%d, %d) = %4.0f\t *\n", I[t], t, E_min[I_indice][t] );
+                printf("Q_opt (%d, %d) = %4.0f \t *\n", t+1, I[t], Q_opt[t+1][I_indice] );
                 printf("**************************\n");
         }
     }
     
     int I0_indice = I0+d_max;     ///here I0_indice is defined has the same feauter of I_indice butfor I0
     E_min[I0_indice][0] = 900000;
-    Q_opt[1][I0_indice] = 0;
+    Q_opt[1][I0_indice] = 0.0;
     for (Q[1][I0_indice] = fmin(I0,0); Q[1][I0_indice] <= fmax(0,d_max-I0); Q[1][I0_indice]++)
     {
        
        E[I0_indice][0] = ProcurementCost(Q[1][I0_indice], c, k) + h*fmax(0,I0) + p*fmin(0,I0) + CalculateSigma(d_max, I0_indice+Q[1][I0_indice], E_min, Demand_Data_Array, ProbabilityArray, 1, Demand_Data_num);
+      /// printf("E is %f for Q %f\n", E[I0_indice][0], Q[1][I0_indice]);
        if (E[I0_indice][0] < E_min[I0_indice][0])
         {
             E_min[I0_indice][0] = E[I0_indice][0];
@@ -113,7 +116,6 @@ int main(int argc, char *argv[])
     free(E_min);
     free(Demand_Data_Array); 
     free(ProbabilityArray);
-
 
     
     printf("**********DONE!***********\n\n");

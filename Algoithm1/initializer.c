@@ -54,7 +54,7 @@ void init_Emin(double **Emin, int d_max, int T)
 
 double ProcurementCost( double Q, double c, double k)
 {
-	if (Q==0) return 0;
+	///if (Q==0) return 0;
 	return c + k*Q;
 }
 
@@ -62,30 +62,15 @@ double CalculateSigma( int D_max, int insideSum, double **Emin, int *Demand, dou
 {
 /*	E_min[i-dk[m]+Q[t+1][i]][t+1] first array is insideSUM and second array is insideTIME */
  
-	int icounter;
-	double result;
-	
-
+	double prob = 1.0/Data_num;
 	int counter;
 	double Sigma = 0;
-	for (counter = 0; counter <= D_max; counter++ )
+	for (counter = 0; counter <= Data_num; counter++ )
 	{
-		if (counter <= Demand[0])	result = probability[0];
-		else {
-		for (icounter=1; icounter<Data_num; icounter++)
-		{
-			if (counter <= Demand[icounter])
-				{
-					result = ( (probability[icounter]-probability[icounter-1]) / (Demand[icounter]-Demand[icounter-1]) ) * counter;
-					break;
-				}
-		}
-			}
-		result = 1/D_max;	
 	///	printf("%d pr=%f\n",counter, pr[counter] );
 	///	printf("dk=%d\n",dk[counter] );
-	///	printf("Indicessag=%d\n", insideSum - counter);
-		Sigma += result* Emin[insideSum- counter][insideTIME];
+	///	printf("Indicessag=%d\n", insideSum - Demand[counter]);
+		Sigma += prob* Emin[insideSum- Demand[counter]][insideTIME];
 	}
 	///printf("%.2f\n", Sigma);
 	return Sigma;
