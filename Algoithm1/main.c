@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
   /************ Allocate the size of Matrices *******************************/  
 
   int Demand_Data_num;   /// The Number of Demand Data that user should type in
-  printf("\nEnter Number of Data you have: ");
+  printf("\nEnter Number of Past Data you have to calculate the Probability: ");
   scanf("%d", &Demand_Data_num);
   double *ProbabilityArray = (double *) malloc ((size_t)(Demand_Data_num * sizeof(double)));
   int *Demand_Data_Array = (int *) malloc ((size_t)(Demand_Data_num * sizeof(int)));
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
   if (Q == 0 || Q_opt == 0 || E == 0 || E_min == 0 || I == 0) ERROR("Storage cannot be allocated");
 
-  printf("\n*********WELCOME!*********\n");
+
   
 
 
@@ -83,9 +83,9 @@ int main(int argc, char *argv[])
                 }
 
            }
-                printf("E_min (%d, %d) = %4.0f\t *\n", I[t], t, E_min[I_indice][t] );
+/*                printf("E_min (%d, %d) = %4.0f\t *\n", I[t], t, E_min[I_indice][t] );
                 printf("Q_opt (%d, %d) = %4.0f \t *\n", t+1, I[t], Q_opt[t+1][I_indice] );
-                printf("**************************\n");
+                printf("**************************\n");*/
         }
     }
     

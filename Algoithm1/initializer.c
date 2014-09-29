@@ -7,10 +7,36 @@
 ///int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c, double *k, double *pr, int *dk, int argc, char *argv[])
 int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c, double *k, int argc, char *argv[])
 {
-	///double pr1,pr2,pr3;
-	///int dk1,dk2,dk3;
+  ///double pr1,pr2,pr3;
+  ///int dk1,dk2,dk3;
+  printf("\n******************************* WELCOME! *****************************\n");
+  printf("********************** Inventory Model Application  ******************\n");
+  printf("********************* Version 1.05  (September 2014) *****************\n");
+  printf("************************ Written By : Afshin Loni  *******************\n");
+  printf("**** Under Supervision of : Dipl.-Wirtsch.-Ing. Steffi Hoppenheit ****\n");
+  printf("******** Lehrstuhl für Fördertechnik Materialfluss Logistik  *********\n");
+  printf("******************* Technische Universität München *******************\n");
+  printf("******************* ****************************** *******************\n");
+  printf("******************* ****************************** *******************\n");
+  printf("\nPlease Enter The Data Requested in order to calculate the order\n");
+  printf("\tTime Period (T) :            ");
+  scanf("%d", T);
+  printf("\tMaximum Demand  :            ");
+  scanf("%d", d_max);
+  printf("\tCurrent Inevntory Level :    ");
+  scanf("%d", I0);
+  printf("\tHolding Cost :               ");
+  scanf("%lf", h);
+  printf("\tPenalty Cost :               ");
+  scanf("%lf", p);
+  printf("\tAdminstartional Cost :       ");
+  scanf("%lf", c);
+  printf("\tPrecurement Cost per Piece : ");
+  scanf("%lf", k);
 
-	if (argc != 2)
+
+
+/*	if (argc != 2)
 	{
 		char szBuff[80];
 		sprintf(szBuff, "No file/too many files given!");
@@ -23,7 +49,7 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
 	READ_DOUBLE(argv[1], *h);
 	READ_DOUBLE(argv[1], *p);
 	READ_DOUBLE(argv[1], *c);
-	READ_DOUBLE(argv[1], *k);
+	READ_DOUBLE(argv[1], *k);*/
 	///READ_DOUBLE(argv[1], pr1);
 	///READ_DOUBLE(argv[1], pr2);
 	///READ_DOUBLE(argv[1], pr3);
@@ -65,7 +91,7 @@ double CalculateSigma( int D_max, int insideSum, double **Emin, int *Demand, dou
 	double prob = 1.0/Data_num;
 	int counter;
 	double Sigma = 0;
-	for (counter = 0; counter <= Data_num; counter++ )
+	for (counter = 0; counter < Data_num; counter++ )
 	{
 	///	printf("%d pr=%f\n",counter, pr[counter] );
 	///	printf("dk=%d\n",dk[counter] );
