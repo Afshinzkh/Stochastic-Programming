@@ -21,14 +21,15 @@ void BubbleSort(int *Demand, int Data_num)
 }
 
 
-void CalculatePrabability(double *Probability, int *Demand, int Data_num, int d_max)
+void CalculatePrabability(int *IntervalArray, int *Demand, int Data_num, int d_max, int IntervalCount)
 {
-	printf("\nEnter Data for past demand \n \t (Warining! Datas should be less than Maximum Demand i.e. (%d)) : ", d_max);
+	printf("\n\t\t\t *** STEP 2 : PAST DEMAND DATA ***\n");
+	printf("\nEnter Data for past demand \n  (Warining! Datas should be less than Maximum Demand i.e. (%d)) :\n", d_max);
 
 	int counter;	
 	for(counter=0; counter<Data_num; counter++)
 	{
-		printf("\nEnter Data Number '-- %d --' : ",counter+1);
+		printf("Enter Data Number '-- %d --' : ",counter+1);
 		scanf("%d",&Demand[counter]);	
 		if (Demand[counter] > d_max)
 		{
@@ -46,11 +47,11 @@ void CalculatePrabability(double *Probability, int *Demand, int Data_num, int d_
 	///		so each interval will have a weight and the probability of a number being in that interval is weight / (total number of past data)
 
 
-	int IntervalCount = d_max/100 + 1; 	/// number of intervals that have to be created
-	int *IntervalArray;					/// the array containing intervals
+/*	int IntervalCount = d_max/100 + 1; 	/// number of intervals that have to be created
+	int *IntervalArray;	*/				/// the array containing intervals /// ino bayad befresti tooye main . c
 	int result;							/// to see each demand is in which interval
-
-	IntervalArray = (int *) malloc((size_t)(IntervalCount) * sizeof(int));
+/*
+	IntervalArray = (int *) malloc((size_t)(IntervalCount) * sizeof(int));*/
 
 	for (counter = 0; counter<IntervalCount; counter++)
 	{
@@ -62,6 +63,7 @@ void CalculatePrabability(double *Probability, int *Demand, int Data_num, int d_
 		result = Demand[counter]/100;
 		IntervalArray[result]++;
 	}
+	printf("\n**************** Probability Function Calculated Succesfully ***********\n\n");
 	/// now it is time to check the future demand 
 /*	for (counter = 0; counter<Data_num; counter++)
 	{
@@ -71,4 +73,35 @@ void CalculatePrabability(double *Probability, int *Demand, int Data_num, int d_
 	{
 		printf("interval number %d is equal to : %d \n", counter, IntervalArray[counter]);
 	}*/
+}
+
+void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data_num, int d_max, int IntervalCount, int *futureDemand, double *prob)
+{
+	int icounter;
+	int jcounter;
+	int result;
+	printf("\n\t\t\t *** STEP 3 : FUTURE DEMAND DATA ***\n");
+	printf("Enter The Requiered Demand for next 6 month\n (Warining! Datas should be less than Maximum Demand i.e. (%d))\n", d_max);
+	for (icounter = 0; icounter<6; icounter++)
+	{
+		printf("Demand for month %d :  ", icounter+1);
+		scanf("%d", &futureDemand[icounter]);
+		if (futureDemand[icounter] > d_max)
+		{
+			printf("Wrong Number. Data Should be less than %d . Try again!\n", d_max);
+			icounter--;
+		}
+	}
+
+    printf("******************* ****************************** *******************\n");
+	for (icounter = 0; icounter<6; icounter++)
+	{
+		result = futureDemand[icounter]/100;
+	///	printf("result = %d\n", result);
+		for (jcounter=0;jcounter<IntervalCount;jcounter++)
+		{
+			if (result==jcounter) prob[icounter]= (double) IntervalArray[jcounter]/(double) Demand_Data_num;
+		}
+		printf("\t\tprobability of month %d = %.4lf\n", icounter+1, prob[icounter]);
+	}
 }

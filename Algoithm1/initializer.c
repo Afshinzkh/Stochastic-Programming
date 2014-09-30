@@ -5,10 +5,9 @@
 
 
 ///int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c, double *k, double *pr, int *dk, int argc, char *argv[])
-int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c, double *k, int argc, char *argv[])
+int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c, double *k, double *DP, int argc, char *argv[])
 {
-  ///double pr1,pr2,pr3;
-  ///int dk1,dk2,dk3;
+
   printf("\n******************************* WELCOME! *****************************\n");
   printf("********************** Inventory Model Application  ******************\n");
   printf("********************* Version 1.05  (September 2014) *****************\n");
@@ -18,22 +17,25 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
   printf("******************* Technische Universität München *******************\n");
   printf("******************* ****************************** *******************\n");
   printf("******************* ****************************** *******************\n");
-  printf("\nPlease Enter The Data Requested in order to calculate the order\n");
-  printf("\tTime Period (T) :            ");
+  printf("\n  In this Application you should Enter the requested data in 3 Steps\n");
+  printf("\n\t\t\t *** STEP 1 : PRIMARY DATA ***\n");
+  
+  printf("\tTime Period (T) :                   ");
   scanf("%d", T);
-  printf("\tMaximum Demand  :            ");
+  printf("\tMaximum Demand  :                   ");
   scanf("%d", d_max);
-  printf("\tCurrent Inevntory Level :    ");
+  printf("\tCurrent Inevntory Level :           ");
   scanf("%d", I0);
-  printf("\tHolding Cost :               ");
+  printf("\tHolding Cost :                      ");
   scanf("%lf", h);
-  printf("\tPenalty Cost :               ");
+  printf("\tPenalty Cost :                      ");
   scanf("%lf", p);
-  printf("\tAdminstartional Cost :       ");
+  printf("\tAdminstartional Cost :              ");
   scanf("%lf", c);
-  printf("\tPrecurement Cost per Piece : ");
+  printf("\tPrecurement Cost per Piece :        ");
   scanf("%lf", k);
-
+  printf("\tDelivery Performance (Percentage) : ");
+  scanf("%lf", DP);
 
 
 /*	if (argc != 2)
@@ -88,15 +90,15 @@ double CalculateSigma( int D_max, int insideSum, double **Emin, int *Demand, dou
 {
 /*	E_min[i-dk[m]+Q[t+1][i]][t+1] first array is insideSUM and second array is insideTIME */
  
-	double prob = 1.0/Data_num;
+	///double prob = 1.0/Data_num;
 	int counter;
 	double Sigma = 0;
-	for (counter = 0; counter < Data_num; counter++ )
+	for (counter = 0; counter < 6; counter++ )
 	{
 	///	printf("%d pr=%f\n",counter, pr[counter] );
 	///	printf("dk=%d\n",dk[counter] );
 	///	printf("Indicessag=%d\n", insideSum - Demand[counter]);
-		Sigma += prob* Emin[insideSum- Demand[counter]][insideTIME];
+		Sigma += probability[counter]* Emin[insideSum- Demand[counter]][insideTIME];
 	}
 	///printf("%.2f\n", Sigma);
 	return Sigma;
