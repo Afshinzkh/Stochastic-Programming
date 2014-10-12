@@ -87,26 +87,52 @@ double ProcurementCost( double Q, double c, double k)
 	return c + k*Q;
 }
 
-double CalculateSigma( int D_max, int insideSum, double **Emin, int *Demand, double *probability, int insideTIME, int num_future)
+double CalculateSigma( int D_max, int insideSum, double **Emin, int *D_K, double *probability, int insideTIME, int num_DK)
 {
 /*	E_min[i-dk[m]+Q[t+1][i]][t+1] first array is insideSUM and second array is insideTIME */
  
 	///double prob = 1.0/Data_num;
-	int random_var;
+///	int random_var;
 	int counter;
 	double Sigma = 0;
 	///srand(time(NULL));
-	for (counter = 0; counter < num_future; counter++ )
+	for (counter = 0; counter < num_DK; counter++ )
 	{
 	///	printf("%d pr=%f\n",counter, pr[counter] );
 	///	printf("dk=%d\n",dk[counter] );
-	///	printf("Indicessag=%d\n", insideSum - Demand[counter]);
-		random_var = rand() % D_max;
-		Sigma += probability[counter]* Emin[insideSum- random_var][insideTIME];
+	///printf("Indicessag=%d\n", insideSum - D_K[counter]);
+	///	random_var = rand() % D_max;
+		Sigma += probability[counter]* Emin[insideSum- D_K[counter]][insideTIME];
 	}
 	///printf("%d\n", random_var);
 	///printf("%.2f\n", Sigma);
 	return Sigma;
+}
+
+void Generate_Random_Data(int *D_K, int D_max, int *IntervalArray, int *past_data_array,int num_past_data, int IntervalCount, double *prob) /// probability of this random variable should be calculated
+{
+	srand(time(NULL));
+	printf(" 4 Random Data Generated\n");
+	int icounter,jcounter;
+	int result;
+	for(icounter=0; icounter<4; icounter++)
+	{
+		D_K[icounter] = rand() % D_max;
+		
+	}
+
+
+	/// Calculate probability of each random variable
+
+	for (icounter = 0; icounter<4; icounter++)
+	{
+		result = D_K[icounter]/100;
+		for (jcounter=0;jcounter<IntervalCount;jcounter++)
+		{
+			if (result==jcounter) prob[icounter]= (double) IntervalArray[jcounter]/(double) num_past_data;
+		}
+		printf("Random data %d is : %d  with the probability of : %.4f \n",icounter+1, D_K[icounter], prob[icounter] );
+	}
 }
 
 

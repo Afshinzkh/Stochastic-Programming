@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
 
 
   
-    srand(time(NULL));
-    
+ ///   srand(time(NULL));
+
     /*int a;
     for (int i=0; i<6; i++)
     {
@@ -48,34 +48,50 @@ int main(int argc, char *argv[])
   DP = 1.0 - (DP/100.0) ; /// Delivery Performance Alignment
   ///printf(" DP IS : %f\n", DP);
 
-  /************ Allocate the size of Matrices *******************************/  
-
-  int Demand_Data_num;   /// The Number of Demand Data that user should type in
+  /************ ALLOCATION OF PAST DATA MATRICES  *******************************/  
+  printf("\n\t\t\t *** STEP 2 : PAST DEMAND DATA ***\n");
+  int num_past_data;   /// The Number of Past Demand Data that user should type in
   printf("\nEnter Number of Past Data you have, in order to calculate the Probability: ");
-  scanf("%d", &Demand_Data_num);
-  double *ProbabilityArray = (double *) malloc ((size_t)(Demand_Data_num * sizeof(double)));
-  int *Demand_Data_Array = (int *) malloc ((size_t)(Demand_Data_num * sizeof(int)));
+  scanf("%d", &num_past_data);
+  double *ProbabilityArray = (double *) malloc ((size_t)(num_past_data * sizeof(double)));
+  int *past_data_array = (int *) malloc ((size_t)(num_past_data * sizeof(int)));
   /****************************************************************************/  
-  
+  /// This part is to devide the demand in to intervals and calculate probability of each interval
   int IntervalCount = d_max/100 + 1;
   int *IntervalArray; 
   IntervalArray = (int *) malloc((size_t)(IntervalCount) * sizeof(int));
 
 
 
-  CalculatePrabability(IntervalArray, Demand_Data_Array, Demand_Data_num, d_max, IntervalCount);
+  CalculatePrabability(IntervalArray, past_data_array, num_past_data, d_max, IntervalCount);
   
-  int num_future;   /// Number of Random Data
-  printf("Enter Number of Data you might have for next month:");
-  scanf("%d",&num_future);
-  int *futureDemand;
-  double *prob = (double *) malloc ((size_t)(num_future * sizeof(double)));
-  futureDemand = (int *) malloc((size_t)(num_future) * sizeof(int));
+  /***********************************Calculation of Future DATA****************************************/
+  printf("\n\t\t\t *** STEP 3 : FUTURE DEMAND DATA ***\n");
+  double *prob;
+  int *D_K;
+  int num_DK;   /// Number of D_K
+  int choose_num; /// the method number should be 1 or 2
+  printf("\nchoose Method: 1) with random variables 2) with forecast data: ");
+  scanf("%d", &choose_num);
+  if (choose_num==1)
+  {
+    num_DK = 4;
+    prob = (double *) malloc ((size_t)(num_DK * sizeof(double)));
+    D_K = (int *) malloc((size_t) 4 * sizeof(int));
+    Generate_Random_Data(D_K, d_max, IntervalArray, past_data_array,num_past_data, IntervalCount, prob);
+  }
+  else if (choose_num == 2) /// I have to think about this shit as well
+  {  
+    printf("Enter Number of Data you might have for next month:");
+    scanf("%d",&num_DK);
+    prob = (double *) malloc ((size_t)(num_DK * sizeof(double)));
+    D_K = (int *) malloc((size_t)(num_DK) * sizeof(int));
 
-  GetFutureDemand(IntervalArray, Demand_Data_Array, Demand_Data_num, d_max, IntervalCount, futureDemand, prob, num_future);
+    GetFutureDemand(IntervalArray, past_data_array, num_past_data, d_max, IntervalCount, D_K, prob, num_DK);
+  }
 
 
-  ///readParameters(&T, &d_max, &I0, &h, &p, &c, &k, ProbabilityArray, Demand_Data_Array, argc, argv);
+  ///readParameters(&T, &d_max, &I0, &h, &p, &c, &k, ProbabilityArray, past_data_array, argc, argv);
   
   /************ Allocate the size of Matrices *******************************/
   
@@ -111,7 +127,7 @@ int main(int argc, char *argv[])
                 //// add delivery performance --> Q[t+1][I_indice] = Q[t+1][I_indice] + floor(DP * Q[t+1][I_indice])
                   ///printf("\nHERE!!!\n");
                /// if (I_indice % pitch == 0) printf("=");
-                E[I_indice][t] = ProcurementCost(Q[t+1][I_indice], c, k) + h*fmax(0,I[t]) + p*fmin(0,I[t]) + CalculateSigma(d_max, I_indice+Q[t+1][I_indice], E_min, futureDemand, prob, t+1, num_future);
+                E[I_indice][t] = ProcurementCost(Q[t+1][I_indice], c, k) + h*fmax(0,I[t]) + p*fmin(0,I[t]) + CalculateSigma(d_max, I_indice+Q[t+1][I_indice], E_min, D_K, prob, t+1, num_DK);
                 ///printf("Here is E: %.2f for Q = %2.f \n", E[I_indice][t], Q[t+1][I_indice] );
                 if (E[I_indice][t] < E_min [I_indice][t])
                 {
@@ -135,7 +151,7 @@ int main(int argc, char *argv[])
     {
        
       /// Q[1][I0_indice] = Q[1][I0_indice] + floor(DP * Q[1][I0_indice]);
-       E[I0_indice][0] = ProcurementCost(Q[1][I0_indice], c, k) + h*fmax(0,I0) + p*fmin(0,I0) + CalculateSigma(d_max, I0_indice+Q[1][I0_indice], E_min, futureDemand, prob, 1, num_future);
+       E[I0_indice][0] = ProcurementCost(Q[1][I0_indice], c, k) + h*fmax(0,I0) + p*fmin(0,I0) + CalculateSigma(d_max, I0_indice+Q[1][I0_indice], E_min, D_K, prob, 1, num_DK);
       /// printf("E is %f for Q %f\n", E[I0_indice][0], Q[1][I0_indice]);
        if (E[I0_indice][0] < E_min[I0_indice][0])
         {
@@ -155,7 +171,7 @@ int main(int argc, char *argv[])
     free(I);
     free(E);
     free(E_min);
-    free(Demand_Data_Array); 
+    free(past_data_array); 
     free(ProbabilityArray);
     free(prob);
     free(IntervalArray);

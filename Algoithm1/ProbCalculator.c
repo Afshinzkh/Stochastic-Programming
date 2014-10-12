@@ -23,7 +23,7 @@ void BubbleSort(int *Demand, int Data_num)
 
 void CalculatePrabability(int *IntervalArray, int *Demand, int Data_num, int d_max, int IntervalCount)
 {
-	printf("\n\t\t\t *** STEP 2 : PAST DEMAND DATA ***\n");
+	
 	printf("\nEnter Data for past demand \n  (Warining! Datas should be less than Maximum Demand i.e. (%d)) :\n", d_max);
 
 	int counter;	
@@ -63,7 +63,7 @@ void CalculatePrabability(int *IntervalArray, int *Demand, int Data_num, int d_m
 		result = Demand[counter]/100;
 		IntervalArray[result]++;
 	}
-	printf("\n**************** Probability Function Calculated Succesfully ***********\n\n");
+	printf("\n********************** Probability Function Calculated Succesfully ***********\n\n");
 	/// now it is time to check the future demand 
 /*	for (counter = 0; counter<Data_num; counter++)
 	{
@@ -81,7 +81,7 @@ void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data
 	int jcounter;
 	int result;
 	///int number_of_data;
-	printf("\n\t\t\t *** STEP 3 : FUTURE DEMAND DATA ***\n");
+	
 
 	printf("Enter The Requiered Demand for next month\n (Warining! Datas should be less than Maximum Demand i.e. (%d))\n", d_max);
 	for (icounter = 0; icounter<number_of_data; icounter++)
