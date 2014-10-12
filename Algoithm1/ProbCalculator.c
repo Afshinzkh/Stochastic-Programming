@@ -75,14 +75,16 @@ void CalculatePrabability(int *IntervalArray, int *Demand, int Data_num, int d_m
 	}*/
 }
 
-void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data_num, int d_max, int IntervalCount, int *futureDemand, double *prob)
+void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data_num, int d_max, int IntervalCount, int *futureDemand, double *prob, int number_of_data)
 {
 	int icounter;
 	int jcounter;
 	int result;
+	///int number_of_data;
 	printf("\n\t\t\t *** STEP 3 : FUTURE DEMAND DATA ***\n");
-	printf("Enter The Requiered Demand for next 6 month\n (Warining! Datas should be less than Maximum Demand i.e. (%d))\n", d_max);
-	for (icounter = 0; icounter<6; icounter++)
+
+	printf("Enter The Requiered Demand for next month\n (Warining! Datas should be less than Maximum Demand i.e. (%d))\n", d_max);
+	for (icounter = 0; icounter<number_of_data; icounter++)
 	{
 		printf("Demand for month %d :  ", icounter+1);
 		scanf("%d", &futureDemand[icounter]);
@@ -94,7 +96,7 @@ void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data
 	}
 
     printf("******************* ****************************** *******************\n");
-	for (icounter = 0; icounter<6; icounter++)
+	for (icounter = 0; icounter<number_of_data; icounter++)
 	{
 		result = futureDemand[icounter]/100;
 	///	printf("result = %d\n", result);

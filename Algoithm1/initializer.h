@@ -6,6 +6,6 @@
 int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c, double *k, double *DP, int argc, char *argv[]);
 void init_Emin(double **Emin, int d_max, int T);
 double ProcurementCost( double Q, double c, double k);
-double CalculateSigma ( int D_max, int insideSum, double **Emin, int *dk, double *pr, int insideTIME, int Data_num);
+double CalculateSigma ( int D_max, int insideSum, double **Emin, int *dk, double *pr, int insideTIME, int num_future);
 
 #endif 

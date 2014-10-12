@@ -1,3 +1,4 @@
+
 #include "helper.h"
 #include "initializer.h"
 
@@ -86,20 +87,24 @@ double ProcurementCost( double Q, double c, double k)
 	return c + k*Q;
 }
 
-double CalculateSigma( int D_max, int insideSum, double **Emin, int *Demand, double *probability, int insideTIME, int Data_num)
+double CalculateSigma( int D_max, int insideSum, double **Emin, int *Demand, double *probability, int insideTIME, int num_future)
 {
 /*	E_min[i-dk[m]+Q[t+1][i]][t+1] first array is insideSUM and second array is insideTIME */
  
 	///double prob = 1.0/Data_num;
+	int random_var;
 	int counter;
 	double Sigma = 0;
-	for (counter = 0; counter < 6; counter++ )
+	///srand(time(NULL));
+	for (counter = 0; counter < num_future; counter++ )
 	{
 	///	printf("%d pr=%f\n",counter, pr[counter] );
 	///	printf("dk=%d\n",dk[counter] );
 	///	printf("Indicessag=%d\n", insideSum - Demand[counter]);
-		Sigma += probability[counter]* Emin[insideSum- Demand[counter]][insideTIME];
+		random_var = rand() % D_max;
+		Sigma += probability[counter]* Emin[insideSum- random_var][insideTIME];
 	}
+	///printf("%d\n", random_var);
 	///printf("%.2f\n", Sigma);
 	return Sigma;
 }
