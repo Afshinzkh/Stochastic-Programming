@@ -7,6 +7,6 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
 void init_Emin(double **Emin, int d_max, int T);
 double ProcurementCost( double Q, double c, double k);
 double CalculateSigma ( int D_max, int insideSum, double **Emin, int *D_K, double *pr, int insideTIME, int num_future);
-void Generate_Random_Data(int *D_K, int D_max, int *IntervalArray, int *past_data_array,int num_past_data, int IntervalCount, double *prob);
+
 
 #endif 

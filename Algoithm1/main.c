@@ -75,11 +75,13 @@ int main(int argc, char *argv[])
   scanf("%d", &choose_num);
   if (choose_num==1)
   {
-    num_DK = 4;
+    num_DK = 10;
     prob = (double *) malloc ((size_t)(num_DK * sizeof(double)));
-    D_K = (int *) malloc((size_t) 4 * sizeof(int));
+    D_K = (int *) malloc((size_t) num_DK * sizeof(int));
     Generate_Random_Data(D_K, d_max, IntervalArray, past_data_array,num_past_data, IntervalCount, prob);
+    
   }
+  
   else if (choose_num == 2) /// I have to think about this shit as well
   {  
     int num_forecast; /// Number of forecast data
@@ -91,6 +93,7 @@ int main(int argc, char *argv[])
 
     GetFutureDemand(IntervalArray, past_data_array, num_past_data, d_max, IntervalCount, D_K, prob, num_forecast);
   }
+
 
 
   ///readParameters(&T, &d_max, &I0, &h, &p, &c, &k, ProbabilityArray, past_data_array, argc, argv);
@@ -117,6 +120,7 @@ int main(int argc, char *argv[])
                                   /// is sometimes negative, we use I_indice to prevent that
   ///  int pitch = d_max/100;
     int Qt_DP; /// Qt with added Delivery Performance;
+    printf("Heewwww\n");
     for (t=T;t >=1 ;t--)
     {
         for (I[t] = -d_max; I[t] <= d_max; I[t]++)

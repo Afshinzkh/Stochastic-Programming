@@ -130,8 +130,42 @@ void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data
 		{
 			if (result==jcounter) prob[icounter]= (double) IntervalArray[jcounter]/(double) Demand_Data_num;
 		}
-		printf("\t\tprobability for forecast %d  is : %.4lf\n", D_K[icounter], prob[icounter]);
+		printf("probability for forecast %d  is : %.4lf\n", D_K[icounter], prob[icounter]);
 	}
-	
 
+}
+
+void Generate_Random_Data(int *D_K, int D_max, int *IntervalArray, int *past_data_array,int num_past_data, int IntervalCount, double *prob) 
+{
+	srand(time(NULL));
+	///printf(" 10 Random Data Generated\n");
+	int icounter,jcounter;
+	int result;
+
+	double deviation; /// standard deviation
+    double mean; 		/// average
+
+	Calculate_Deviation(past_data_array, num_past_data, &mean, &deviation);
+
+	int range = floor(mean + deviation) - floor (mean - deviation);
+	int min_Data = mean - deviation;
+	
+	printf ("\n10 Random data Generated between %d and %d\n", min_Data, min_Data+range);
+	
+	for(icounter=0; icounter<10; icounter++)
+	{
+		D_K[icounter] = min_Data + (rand() % range);
+	}
+
+	/// Calculate probability of each random variable
+
+	for (icounter = 0; icounter<10; icounter++)
+	{
+		result = D_K[icounter]/100;
+		for (jcounter=0;jcounter<IntervalCount;jcounter++)
+		{
+			if (result==jcounter) prob[icounter]= (double) IntervalArray[jcounter]/(double) num_past_data;
+		}
+		printf("Random data %2d is : %3d  with the probability of : %.4f \n",icounter+1, D_K[icounter], prob[icounter] );
+	}
 }
