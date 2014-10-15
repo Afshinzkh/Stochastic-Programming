@@ -4,6 +4,7 @@
 #include "helper.h"
 
 void BubbleSort(int *Demand, int Data_num);
+void Calculate_Deviation(int *forecast_data, int number_of_data, double *mean, double *deviation);
 void CalculatePrabability(int *IntervalArray, int *Demand, int Data_num, int d_max, int IntervalCount);
 void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data_num, int d_max, int IntervalCount, int *futureDemand, double *prob, int number_of_data);
 

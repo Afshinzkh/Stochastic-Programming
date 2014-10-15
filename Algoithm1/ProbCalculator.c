@@ -20,6 +20,25 @@ void BubbleSort(int *Demand, int Data_num)
 
 }
 
+void Calculate_Deviation(int *forecast_data, int number_of_data, double *mean, double *deviation)
+{
+	int icounter;
+	int sum=0;
+	for ( icounter = 0; icounter < number_of_data; icounter++)
+	{
+		sum+=forecast_data[icounter];
+	}
+	*mean= (double) sum / (double) number_of_data;
+	sum =0;
+	for ( icounter = 0; icounter < number_of_data; icounter++)
+	{
+		sum += (*mean - forecast_data[icounter]) * (*mean - forecast_data[icounter]);
+	}
+	*deviation = sqrt(sum/number_of_data);
+
+	printf("Mean = %.4f\t Standard Deviation = %.4f\n", *mean, *deviation );
+}
+
 
 void CalculatePrabability(int *IntervalArray, int *Demand, int Data_num, int d_max, int IntervalCount)
 {
@@ -75,20 +94,20 @@ void CalculatePrabability(int *IntervalArray, int *Demand, int Data_num, int d_m
 	}*/
 }
 
-void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data_num, int d_max, int IntervalCount, int *futureDemand, double *prob, int number_of_data)
+void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data_num, int d_max, int IntervalCount, int *D_K, double *prob, int number_of_data)
 {
 	int icounter;
 	int jcounter;
 	int result;
 	///int number_of_data;
-	
+	int *forecast_data = (int *) malloc((size_t) number_of_data * sizeof(int));
 
 	printf("Enter The Requiered Demand for next month\n (Warining! Datas should be less than Maximum Demand i.e. (%d))\n", d_max);
 	for (icounter = 0; icounter<number_of_data; icounter++)
 	{
-		printf("Demand for month %d :  ", icounter+1);
-		scanf("%d", &futureDemand[icounter]);
-		if (futureDemand[icounter] > d_max)
+		printf("Demand forecast  %d :  ", icounter+1);
+		scanf("%d", &forecast_data[icounter]);
+		if (forecast_data[icounter] > d_max)
 		{
 			printf("Wrong Number. Data Should be less than %d . Try again!\n", d_max);
 			icounter--;
@@ -96,14 +115,23 @@ void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data
 	}
 
     printf("******************* ****************************** *******************\n");
-	for (icounter = 0; icounter<number_of_data; icounter++)
+    double deviation; /// standard deviation
+    double mean; 		/// average
+    Calculate_Deviation(forecast_data, number_of_data, &mean, &deviation);
+    D_K[0] = floor (mean - deviation);
+    D_K[1] = floor (mean);
+    D_K[2] = floor (mean + deviation);
+
+	for (icounter = 0; icounter<3; icounter++)
 	{
-		result = futureDemand[icounter]/100;
+		result = D_K[icounter]/100;
 	///	printf("result = %d\n", result);
 		for (jcounter=0;jcounter<IntervalCount;jcounter++)
 		{
 			if (result==jcounter) prob[icounter]= (double) IntervalArray[jcounter]/(double) Demand_Data_num;
 		}
-		printf("\t\tprobability of month %d = %.4lf\n", icounter+1, prob[icounter]);
+		printf("\t\tprobability for forecast %d  is : %.4lf\n", D_K[icounter], prob[icounter]);
 	}
+	
+
 }
