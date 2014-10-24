@@ -94,16 +94,17 @@ void CalculatePrabability(int *IntervalArray, int *Demand, int Data_num, int d_m
 	}*/
 }
 
-void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data_num, int d_max, int IntervalCount, int *D_K, double *prob, int number_of_data)
+void GetFutureDemand(int *IntervalArray, int *Past_Data_Array, int num_past_data, int d_max, int IntervalCount, int *D_K, double *prob)
 {
 	int icounter;
 	int jcounter;
 	int result;
 	///int number_of_data;
-	int *forecast_data = (int *) malloc((size_t) number_of_data * sizeof(int));
-
-	printf("Enter The Requiered Demand for next month\n (Warining! Datas should be less than Maximum Demand i.e. (%d))\n", d_max);
-	for (icounter = 0; icounter<number_of_data; icounter++)
+///	int *forecast_data = (int *) malloc((size_t) number_of_data * sizeof(int));
+	int forecast;
+	printf("Enter The Requiered Demand for next month\n (Warining! Data should be less than Maximum Demand i.e. (%d))\n", d_max);
+	scanf("%d", &forecast);
+/*	for (icounter = 0; icounter<number_of_data; icounter++)
 	{
 		printf("Demand forecast  %d :  ", icounter+1);
 		scanf("%d", &forecast_data[icounter]);
@@ -112,15 +113,15 @@ void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data
 			printf("Wrong Number. Data Should be less than %d . Try again!\n", d_max);
 			icounter--;
 		}
-	}
+	}*/
 
     printf("******************* ****************************** *******************\n");
     double deviation; /// standard deviation
     double mean; 		/// average
-    Calculate_Deviation(forecast_data, number_of_data, &mean, &deviation);
-    D_K[0] = floor (mean - deviation);
-    D_K[1] = floor (mean);
-    D_K[2] = floor (mean + deviation);
+    Calculate_Deviation(Past_Data_Array, num_past_data, &mean, &deviation);
+    D_K[0] = forecast + floor(deviation);
+    D_K[1] = forecast;
+    D_K[2] = forecast - floor(deviation);
 
 	for (icounter = 0; icounter<3; icounter++)
 	{
@@ -128,7 +129,7 @@ void GetFutureDemand(int *IntervalArray, int *Demand_Data_Array, int Demand_Data
 	///	printf("result = %d\n", result);
 		for (jcounter=0;jcounter<IntervalCount;jcounter++)
 		{
-			if (result==jcounter) prob[icounter]= (double) IntervalArray[jcounter]/(double) Demand_Data_num;
+			if (result==jcounter) prob[icounter]= (double) IntervalArray[jcounter]/(double) num_past_data;
 		}
 		printf("probability for forecast %d  is : %.4lf\n", D_K[icounter], prob[icounter]);
 	}

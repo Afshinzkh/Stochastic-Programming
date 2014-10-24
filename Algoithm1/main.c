@@ -84,15 +84,16 @@ int main(int argc, char *argv[])
   
   else if (choose_num == 2) /// I have to think about this shit as well
   {  
-    int num_forecast; /// Number of forecast data
-    printf("Enter Number of Data you might have for next month:");
-    scanf("%d",&num_forecast);
+   /// int num_forecast; /// Number of forecast data
+   /// printf("Enter Number of Data you might have for next month:");
+   /// scanf("%d",&num_forecast);
     num_DK = 3;
     prob = (double *) malloc ((size_t)(num_DK * sizeof(double)));
     D_K = (int *) malloc((size_t)(num_DK) * sizeof(int));
 
-    GetFutureDemand(IntervalArray, past_data_array, num_past_data, d_max, IntervalCount, D_K, prob, num_forecast);
+    GetFutureDemand(IntervalArray, past_data_array, num_past_data, d_max, IntervalCount, D_K, prob);
   }
+  else  ERROR("Wrong Number!!!");
 
 
 
@@ -118,6 +119,8 @@ int main(int argc, char *argv[])
     int t;                         ///time counter
     int I_indice = 0;              /// helper counter. this is actually the indices for I[t] but since I[t]
                                   /// is sometimes negative, we use I_indice to prevent that
+
+    p = p + (DP*p);
   ///  int pitch = d_max/100;
     int Qt_DP; /// Qt with added Delivery Performance;
     printf("Heewwww\n");
@@ -130,7 +133,8 @@ int main(int argc, char *argv[])
            Q_opt[t+1][I_indice] = 0.0;
            for (Q[t+1][I_indice]=fmin(I[t],0); Q[t+1][I_indice]<= fmax(d_max-I[t],0); Q[t+1][I_indice]++) 
            {
-                Qt_DP = Q[t+1][I_indice] + floor(DP * Q[t+1][I_indice]);
+                Qt_DP = Q[t+1][I_indice]; /// + ///floor(DP * Q[t+1][I_indice]);
+
                 //// add delivery performance --> Q[t+1][I_indice] = Q[t+1][I_indice] + floor(DP * Q[t+1][I_indice])
                   ///printf("\nHERE!!!\n");
                /// if (I_indice % pitch == 0) printf("=");
@@ -158,7 +162,7 @@ int main(int argc, char *argv[])
     for (Q[1][I0_indice] = fmin(I0,0); Q[1][I0_indice] <= fmax(0,d_max-I0); Q[1][I0_indice]++)
     {
        
-      Q1_DP = Q[1][I0_indice] + floor(DP * Q[1][I0_indice]);
+      Q1_DP = Q[1][I0_indice] ;////+ floor(DP * Q[1][I0_indice]);
        E[I0_indice][0] = ProcurementCost(Q[1][I0_indice], c, k) + h*fmax(0,I0) + p*fmin(0,I0) + CalculateSigma(d_max, I0_indice+Q1_DP, E_min, D_K, prob, 1, num_DK);
       /// printf("E is %f for Q %f\n", E[I0_indice][0], Q[1][I0_indice]);
        if (E[I0_indice][0] < E_min[I0_indice][0])

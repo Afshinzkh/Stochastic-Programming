@@ -11,7 +11,7 @@ int readParameters(int *T, int *d_max, int *I0, double *h, double *p, double *c,
 
   printf("\n******************************* WELCOME! *****************************\n");
   printf("********************** Inventory Model Application  ******************\n");
-  printf("********************* Version 1.05  (September 2014) *****************\n");
+  printf("********************* Version 1.06  (October 2014) *******************\n");
   printf("************************ Written By : Afshin Loni  *******************\n");
   printf("**** Under Supervision of : Dipl.-Wirtsch.-Ing. Steffi Hoppenheit ****\n");
   printf("******** Lehrstuhl für Fördertechnik Materialfluss Logistik  *********\n");
